@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Todo Item Card — Stage 1a</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <div id="card-wrapper">
+    <article data-testid="test-todo-card" aria-label="Todo task card">
+
+      <!-- Priority indicator (left border accent) -->
+      <div data-testid="test-todo-priority-indicator" class="priority-indicator" aria-hidden="true"></div>
+
+      <!-- ── HEADER: Checkbox + Title ─── -->
+      <div class="card-header">
+        <div class="checkbox-wrap">
+          <label for="complete-toggle" class="sr-only">Mark task as complete</label>
+          <input
+            type="checkbox"
+            id="complete-toggle"
+            data-testid="test-todo-complete-toggle"
+            aria-label="Mark task as complete"
+          />
+        </div>
+        <div class="title-area">
+          <h2 data-testid="test-todo-title">Redesign the authentication system</h2>
+        </div>
+      </div>
+
+      <!-- ── PRIORITY + STATUS ─── -->
+      <div class="meta-row">
+        <span
+          data-testid="test-todo-priority"
+          class="badge medium"
+          aria-label="Priority: Medium"
+        >⚡ Medium</span>
+
+        <!-- Status control (dropdown) -->
+        <label for="status-control" class="sr-only">Task status</label>
+        <select
+          id="status-control"
+          data-testid="test-todo-status-control"
+          aria-label="Task status"
+          class="status-select"
+        >
+          <option value="Pending">⏳ Pending</option>
+          <option value="In Progress" selected>🔵 In Progress</option>
+          <option value="Done">✅ Done</option>
+        </select>
+
+        <!-- Read-only status badge (stays in sync) -->
+        <span
+          data-testid="test-todo-status"
+          class="badge status-badge"
+          id="status-badge"
+          aria-label="Status: In Progress"
+        >🔵 In Progress</span>
+      </div>
+
+      <!-- ── DESCRIPTION + EXPAND/COLLAPSE ─── -->
+      <div class="description-wrap">
+        <p
+          data-testid="test-todo-description"
+          id="todo-description"
+          class="description collapsed"
+        >
+          We need to redesign the authentication system to support multi-factor
+          authentication and improve security. This includes updating the login
+          flow, adding support for TOTP apps, and ensuring compliance with
+          security standards. Additionally, we must audit existing sessions,
+          implement rate-limiting on login attempts, and roll out a password
+          strength policy across all user tiers.
+        </p>
+        <button
+          data-testid="test-todo-expand-toggle"
+          class="expand-toggle"
+          aria-expanded="false"
+          aria-controls="todo-collapsible"
+          id="expand-toggle"
+        >
+          <span class="expand-label">Show more</span>
+          <svg class="expand-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Collapsible section (extra detail / metadata) -->
+      <div
+        data-testid="test-todo-collapsible-section"
+        id="todo-collapsible"
+        class="collapsible-section"
+        aria-hidden="true"
+      >
+        <div class="collapsible-inner">
+          <p class="collapsible-note">🔒 Security audit must be completed before deployment. Coordinate with the DevOps team for staging rollout.</p>
+        </div>
+      </div>
+
+      <!-- ── DUE DATE + TIME REMAINING ─── -->
+      <div class="time-block" role="group" aria-label="Due date information">
+        <div class="time-row">
+          <span class="time-icon" aria-hidden="true">📅</span>
+          <time
+            data-testid="test-todo-due-date"
+            datetime="2026-04-16T18:00:00Z"
+            aria-label="Due April 16, 2026"
+          >Due Apr 16, 2026</time>
+        </div>
+        <div class="time-row">
+          <span class="time-icon" aria-hidden="true">⏱</span>
+          <time
+            data-testid="test-todo-time-remaining"
+            id="time-remaining"
+            datetime="2026-04-16T18:00:00Z"
+            aria-live="polite"
+            aria-label="Time remaining"
+            class="ok"
+          >Calculating…</time>
+          <!-- Overdue indicator (shown when past due) -->
+          <span
+            data-testid="test-todo-overdue-indicator"
+            id="overdue-indicator"
+            class="overdue-badge hidden"
+            aria-live="polite"
+            role="status"
+          >⚠ Overdue</span>
+        </div>
+      </div>
+
+      <!-- ── TAGS ─── -->
+      <ul data-testid="test-todo-tags" role="list" aria-label="Tags">
+        <li data-testid="test-todo-tag-work" aria-label="Tag: work">🗂 Work</li>
+        <li data-testid="test-todo-tag-urgent" aria-label="Tag: urgent">🔥 Urgent</li>
+        <li aria-label="Tag: design">✏️ Design</li>
+      </ul>
+
+      <!-- ── EDIT FORM (hidden by default) ─── -->
+      <div
+        data-testid="test-todo-edit-form"
+        id="edit-form"
+        class="edit-form hidden"
+        role="form"
+        aria-label="Edit task"
+      >
+        <div class="form-group">
+          <label for="edit-title">Title</label>
+          <input
+            type="text"
+            id="edit-title"
+            data-testid="test-todo-edit-title-input"
+            placeholder="Task title"
+            autocomplete="off"
+          />
+        </div>
+        <div class="form-group">
+          <label for="edit-description">Description</label>
+          <textarea
+            id="edit-description"
+            data-testid="test-todo-edit-description-input"
+            rows="4"
+            placeholder="Describe the task…"
+          ></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-priority">Priority</label>
+            <select id="edit-priority" data-testid="test-todo-edit-priority-select">
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-due-date">Due date</label>
+            <input
+              type="date"
+              id="edit-due-date"
+              data-testid="test-todo-edit-due-date-input"
+            />
+          </div>
+        </div>
+        <div class="form-actions">
+          <button data-testid="test-todo-save-button" class="btn btn-save" id="save-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            Save
+          </button>
+          <button data-testid="test-todo-cancel-button" class="btn btn-cancel" id="cancel-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- ── ACTION BUTTONS ─── -->
+      <div class="actions" id="action-buttons">
+        <button
+          data-testid="test-todo-edit-button"
+          id="edit-btn"
+          class="btn"
+          aria-label="Edit task"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+          Edit
+        </button>
+        <button
+          data-testid="test-todo-delete-button"
+          class="btn"
+          aria-label="Delete task"
+          onclick="alert('Delete clicked')"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+            <path d="M10 11v6M14 11v6"/>
+            <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          Delete
+        </button>
+      </div>
+
+    </article>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>
